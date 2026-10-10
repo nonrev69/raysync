@@ -1,0 +1,16 @@
+{
+  "name": "raysync",
+  "version": "1.0.0",
+  "description": "RaySync — Solar O&M Automation for Sum Ltd",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "cd server && npm run dev",
+    "client": "cd client && npm run dev",
+    "build": "cd client && npm run build",
+    "start": "cd server && npm start"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}

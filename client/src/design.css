@@ -1,0 +1,110 @@
+/* ============================================
+   RaySync Design Tokens — Flow 2 System
+   ============================================ */
+
+:root {
+  /* Canvas */
+  --canvas: #F7F5EF;
+  --canvas-raised: #FFFFFF;
+  --canvas-sunken: #EDEAE0;
+
+  /* Ink */
+  --ink: #0F1115;
+  --ink-secondary: #3D4451;
+  --ink-muted: #6B7280;
+  --ink-faint: #9CA3AF;
+
+  /* Brand */
+  --brand-green: #A4C73A;
+  --brand-green-dark: #8AB02E;
+  --brand-green-light: #C4E06A;
+
+  /* Action */
+  --action-blue: #2B5BDC;
+  --action-blue-hover: #1F47B0;
+  --action-blue-light: #E8EEFC;
+
+  /* Status */
+  --status-pending: #F59E0B;
+  --status-authorised: #3B82F6;
+  --status-works: #F97316;
+  --status-invoiced: #14B8A6;
+  --status-paid: #22C55E;
+  --status-closed: #6B7280;
+
+  /* Semantic */
+  --success: #22C55E;
+  --warning: #F59E0B;
+  --danger: #EF4444;
+  --info: #3B82F6;
+
+  /* Borders */
+  --border: #E5E1D6;
+  --border-strong: #D1CCC0;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(15, 17, 21, 0.05);
+  --shadow-md: 0 4px 12px rgba(15, 17, 21, 0.08);
+  --shadow-lg: 0 8px 24px rgba(15, 17, 21, 0.12);
+
+  /* Radius */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-pill: 999px;
+
+  /* Spacing */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+
+  /* Typography */
+  --font-body: 'Poppins', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Consolas', monospace;
+
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-normal: 250ms ease;
+}
+
+/* Dark mode */
+[data-theme='dark'] {
+  --canvas: #0F1115;
+  --canvas-raised: #1A1D24;
+  --canvas-sunken: #12151A;
+
+  --ink: #F7F5EF;
+  --ink-secondary: #D1CCC0;
+  --ink-muted: #9CA3AF;
+  --ink-faint: #6B7280;
+
+  --brand-green: #A4C73A;
+  --brand-green-dark: #C4E06A;
+  --brand-green-light: #8AB02E;
+
+  --action-blue: #5B82F6;
+  --action-blue-hover: #3B6AE0;
+  --action-blue-light: #1A2744;
+
+  --status-pending: #FBBF24;
+  --status-authorised: #60A5FA;
+  --status-works: #FB923C;
+  --status-invoiced: #2DD4BF;
+  --status-paid: #4ADE80;
+  --status-closed: #9CA3AF;
+
+  --success: #4ADE80;
+  --warning: #FBBF24;
+  --danger: #F87171;
+  --info: #60A5FA;
+
+  --border: #2A2E38;
+  --border-strong: #3D4451;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
+}

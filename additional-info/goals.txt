@@ -1,0 +1,1 @@
+4. Integration & Goals  Logic: Calculations for quotes and invoices are based automatically on MW and agreed rates.  Safety: Mandatory inclusion of the original LC PO number on all outbound invoices.  Tech Stack Suggestions: QuickBooks Online API for finance, OneDrive for storage, and Airtable or Supabase for the database. 

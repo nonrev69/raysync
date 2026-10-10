@@ -1,0 +1,70 @@
+
+jake@sum-ltd.co.uk
+4:04 PM (7 hours ago)
+to me, sam
+
+Hi Stephen,
+
+ 
+
+Ok so this is my workflow. I will give you an overview of what we do day to day to give some context. Our workflow requires zero actual brain power and is just a series of processes triggered by inputs from clients or subbies so I am sure it is ripe for automation!
+
+ 
+
+Business
+
+We are a solar operations and management main contractor. Our sole client (Low Carbon) gives us contracts for various works on the solar farms including:
+
+ 
+
+Grass cutting
+Weed killing
+Panel cleaning
+Hedge trimming
+Miscellaneous groundworks tasks
+Thermographic surveys of sites
+Processing of survey data and delivery of reports
+ 
+
+We sub out all works to three contractors at the moment:
+
+Lemp (all groundworks)
+Futurwise Airial (surveys)
+Sitemark (data processing)
+ 
+
+Whilst we have the one client, the jobs are charged to different business entities with our client’s portfolio depending on process and/or site.
+
+ 
+
+Workflow:
+
+ 
+
+I get a text message from our Low Carbon (LC) asking for various works on a number of different sites.
+I use Quickbooks to generate quotes for each of these processes. We have agreed figures for each process with LC based on the MW power output of each site. I draw the MW for each site from my excel spreadsheet. I save all quotes in the relevant project folder (each solar farm has its own folder which is subcategorised into operation and year).
+When the quotes are accepted, LC send over POs. I save the POs in the relevant folders and generate our own POs for our subcontractors (using PDF output from excel with different rates) which I send on via email. I update my spreadsheet with a checkbox against the POs being received and sent to subbies.
+When the works are complete, I receive an invoice from our subbies along with a site report and a set of pictures from site to demonstrate we have undertaken the works adequately. The pictures are in the form of a google link or directly attached. I save the invoice in one file location and the pics and report in another.
+I generate an invoice to our clients for the completed works and send an email in a specific format to the accounts team with various people included. The people included is based on the business entity that the invoice is being charges to and/or the process being undertaken. I do this by converting the quotes on quickbooks to invoices and manually adding the PO number to the invoice. I update my spreadsheet with a checkbox indicating that the invoice has been sent and save our invoices in our folder structure. The invoices are only accepted if the original PO number from LC is indicated on the invoice in the title and on the invoice itself.
+I send a separate email to the maintenance team at LC with the site report and a link to the site photos (one drive link).
+When the funds are received by ourselves we review the amount received. Sometimes the amount paid to us is from one invoice and easily reconcilable, sometimes it is the combination of multiple invoices and we have to work out which invoice has been paid from the total given.
+Once we have been paid, we pay our subcontractors and I close the operation via a checkbox on my excel sheet.
+ 
+
+There are roughly 100 separately invoiced processes a year.
+
+There are a bunch of other processes which I undertake alongside these like quarterly VAT returns etc but not sure if these need streamlining as they are not as time intensive..
+
+ 
+
+Goals:
+
+Automating the process as much as possible to minimise impact on my time and remove my human error from the system.
+Create a more robust reporting system so I can clearly see what has been done and what hasn’t.
+Reduce time from receiving POs/Invoices to sending our own. Our payment terms with our clients and subbies is the same so I need to get invoices to the clients as soon as we can to mitigate issue with the subbies and our cash flow.
+Ensuring that subbies and clients don’t see each other’s POs or quotes – it’s a constant paranoia of mine that I will copy in the wrong person and our clients will go direct to our subbies and cut us out!
+ 
+
+ 
+
+The system at the moment is very clunky and inefficient but manageable at a pinch – anything you could do to improve this would be stella!

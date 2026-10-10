@@ -1,0 +1,10 @@
+node_modules/
+.next/
+dist/
+releases/
+*.db
+*.zip
+*.tar.gz
+.beads/internal/
+FLOW-3/
+Design/

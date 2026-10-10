@@ -1,0 +1,44 @@
+graph TD
+    %% Entry Point
+    Start((Client Request)) -->|Text/Email| QuoteGen[Generate Quote]
+    
+    %% Phase 1: Quotation
+    subgraph "Quotation Phase"
+    QuoteGen --> MWLookup[Lookup Site MW & Rate]
+    MWLookup --> QBQuote[Create QuickBooks Quote]
+    QBQuote --> FileStore1[Save to Site/Year Folder]
+    end
+
+    %% Phase 2: Ordering
+    FileStore1 -->|Client Sends PO| ClientPO[Log Client PO]
+    subgraph "Work Order Phase"
+    ClientPO --> SubbiePO[Generate Subbie PO @ Lower Rate]
+    SubbiePO --> EmailSubbie[Email Subbie - Privacy Lock Enabled]
+    EmailSubbie --> Tracker1[Update Tracker: PO Sent]
+    end
+
+    %% Phase 3: Execution & Delivery
+    Tracker1 -->|Subbie Completes Work| SubbieDocs[Receive Invoice + Report + Photos]
+    subgraph "Completion Phase"
+    SubbieDocs --> SplitDocs[Split: Invoice to Accounts / Reports to Maint]
+    SplitDocs --> ODLink[Generate OneDrive Photo Link]
+    ODLink --> ClientMaint[Email LC Maintenance Team]
+    end
+
+    %% Phase 4: Billing
+    ClientMaint --> ClientInv[Convert QB Quote to Invoice]
+    subgraph "Billing Phase"
+    ClientInv --> MatchPO[Inject LC PO# into Title & Body]
+    MatchPO --> RouteAccounts[Route to Specific Entity Email]
+    RouteAccounts --> Tracker2[Update Tracker: Client Invoiced]
+    end
+
+    %% Phase 5: Closing
+    Tracker2 -->|Payment Received| Recon[Reconciliation Tool]
+    subgraph "Financial Closing"
+    Recon --> MatchPay[Match Bulk/Single Payments]
+    MatchPay --> PaySubbie[Pay Subcontractor]
+    PaySubbie --> Tracker3[Checkbox: Job Closed]
+    end
+
+    Tracker3 --> End((Process Complete))

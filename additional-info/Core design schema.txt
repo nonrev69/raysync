@@ -1,0 +1,5 @@
+Entity,Key Data Points
+Sites,"Site Name, MW Output, LC Business Entity, Maintenance Contacts, Accounts Contacts."
+Process Catalog,"Task Name (e.g., Weed Killing), Client Rate/MW, Subbie Rate/MW, Assigned Subbie."
+Subcontractors,"Name (Lemp, Futurwise, Sitemark), Contact Email, Service Category."
+Project Tracker,"Status (Quoted to Paid), Client PO#, Subbie PO#, Folder Path, Folder Link."
