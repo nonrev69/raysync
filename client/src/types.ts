@@ -93,6 +93,48 @@ export interface ContactMatrix {
   entity_code?: string;
 }
 
+export type QuoteStatus = 'Draft' | 'Sent' | 'Accepted' | 'Declined';
+export type InvoiceMode = 'split' | 'combined';
+
+export interface QuoteLine {
+  id: string;
+  quote_id: string;
+  site_id: string;
+  service_id: string;
+  mw_output: number;
+  client_rate_per_mw: number;
+  subbie_rate_per_mw: number;
+  line_amount: number;
+  subbie_cost: number;
+  job_id: string | null;
+  sort_order: number;
+  // Joined
+  site_name?: string;
+  site_type?: string;
+  service_name?: string;
+  short_code?: string;
+  category?: string;
+  subbie_name?: string;
+  subbie_email?: string;
+}
+
+export interface Quote {
+  id: string;
+  quote_ref: string;
+  business_entity_id: string;
+  status: QuoteStatus;
+  invoice_mode: InvoiceMode;
+  client_po_number: string | null;
+  total_amount: number;
+  notes: string | null;
+  created_at: string;
+  updated_at: string;
+  entity_name?: string;
+  entity_code?: string;
+  line_count?: number;
+  lines?: QuoteLine[];
+}
+
 export interface DashboardStats {
   totalJobs: number;
   activeJobs: number;

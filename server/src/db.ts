@@ -123,6 +123,40 @@ export function initializeDatabase(): void {
       created_at TEXT NOT NULL DEFAULT (datetime('now'))
     );
 
+    -- Multi-service quotes: one quote can cover many site/service line items
+    CREATE TABLE IF NOT EXISTS quotes (
+      id TEXT PRIMARY KEY,
+      quote_ref TEXT UNIQUE NOT NULL,
+      business_entity_id TEXT NOT NULL REFERENCES business_entities(id),
+      status TEXT NOT NULL DEFAULT 'Draft' CHECK(status IN ('Draft', 'Sent', 'Accepted', 'Declined')),
+      invoice_mode TEXT NOT NULL DEFAULT 'split' CHECK(invoice_mode IN ('split', 'combined')),
+      client_po_number TEXT,
+      total_amount REAL NOT NULL DEFAULT 0,
+      notes TEXT,
+      created_at TEXT NOT NULL DEFAULT (datetime('now')),
+      updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+    );
+
+    CREATE TABLE IF NOT EXISTS quote_lines (
+      id TEXT PRIMARY KEY,
+      quote_id TEXT NOT NULL REFERENCES quotes(id) ON DELETE CASCADE,
+      site_id TEXT NOT NULL REFERENCES sites(id),
+      service_id TEXT NOT NULL REFERENCES services(id),
+      mw_output REAL NOT NULL,
+      client_rate_per_mw REAL NOT NULL,
+      subbie_rate_per_mw REAL NOT NULL,
+      line_amount REAL NOT NULL DEFAULT 0,
+      subbie_cost REAL NOT NULL DEFAULT 0,
+      job_id TEXT REFERENCES jobs(id),
+      sort_order INTEGER NOT NULL DEFAULT 0,
+      created_at TEXT NOT NULL DEFAULT (datetime('now'))
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_quote_lines_quote ON quote_lines(quote_id);
+    CREATE INDEX IF NOT EXISTS idx_jobs_status ON jobs(status);
+    CREATE INDEX IF NOT EXISTS idx_jobs_site ON jobs(site_id);
+    CREATE INDEX IF NOT EXISTS idx_jobs_service ON jobs(service_id);
+
     -- Insert default data
     INSERT OR IGNORE INTO business_entities (id, name, code) VALUES
       ('be-001', 'Low Carbon Solar 1', 'LCS1'),
@@ -166,9 +200,9 @@ export function initializeDatabase(): void {
       ('cm-012', 'be-004', 'Data Processing', 'accounts4@lowcarbon.com', 'maintenance4@lowcarbon.com');
 
     -- Create default admin user (password: admin123)
-    -- Default admin user (password: admin123)
+    -- Default admin user (password: admin123) — scrypt hash
     INSERT OR IGNORE INTO users (id, username, password_hash, role, display_name, email) VALUES
-      ('user-001', 'admin', '$2a$10$ntSNon8nX2KnqO1gZJLQfeFSx3lXmKOZVk6YKqtpna7kgBNLCswQe', 'admin', 'Administrator', 'admin@raysync.local');
+      ('user-001', 'admin', 'scrypt$s8ciD68w_yAoFpQXDn8p6g$t7-9lHgtGgWrJUOZ8EttZaWbgdeeuYPzD2ERusqjpm_9B_HAbXXConArUdEr1zwNM4WY-FdQOb9bwL89q6m19A', 'admin', 'Administrator', 'admin@raysync.local');
   `);
 }
 

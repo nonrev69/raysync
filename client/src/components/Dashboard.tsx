@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { FileText, Briefcase, CheckCircle, AlertTriangle, TrendingUp, DollarSign, X } from 'lucide-react';
+import { IconFileText, IconBriefcase, IconCheckCircle, IconAlertTriangle, IconTrendingUp, IconDollarSign, IconX } from './icons';
 import api from '../api';
 import type { DashboardStats, Job, Site, Service, BusinessEntity, Subcontractor, ContactMatrix } from '../types';
 
@@ -105,10 +105,10 @@ export default function Dashboard({ refresh, onNavigate }: DashboardProps) {
   const fmt = (n: number) => `\u00A3${n.toLocaleString('en-GB', { minimumFractionDigits: 2 })}`;
 
   const statCards = [
-    { label: 'Total Jobs', value: stats.totalJobs, subtitle: `${stats.activeJobs} active`, icon: <Briefcase size={20} />, color: 'var(--action-blue)', bg: 'var(--action-blue-light)' },
-    { label: 'Outstanding Balance', value: fmt(stats.outstandingBalance), subtitle: `${stats.overdueInvoices} overdue invoices`, icon: <AlertTriangle size={20} />, color: 'var(--warning)', bg: '#FEF3C7' },
-    { label: 'Total Revenue', value: fmt(stats.totalRevenue), subtitle: `Profit: ${fmt(stats.profit)}`, icon: <TrendingUp size={20} />, color: 'var(--success)', bg: '#DCFCE7' },
-    { label: 'VAT Liability', value: fmt(stats.vatLiability), subtitle: 'Estimated', icon: <DollarSign size={20} />, color: 'var(--status-paid)', bg: '#E0F2FE' },
+    { label: 'Total Jobs', value: stats.totalJobs, subtitle: `${stats.activeJobs} active`, icon: <IconBriefcase size={20} />, color: 'var(--action-blue)', bg: 'var(--action-blue-light)' },
+    { label: 'Outstanding Balance', value: fmt(stats.outstandingBalance), subtitle: `${stats.overdueInvoices} overdue invoices`, icon: <IconAlertTriangle size={20} />, color: 'var(--warning)', bg: '#FEF3C7' },
+    { label: 'Total Revenue', value: fmt(stats.totalRevenue), subtitle: `Profit: ${fmt(stats.profit)}`, icon: <IconTrendingUp size={20} />, color: 'var(--success)', bg: '#DCFCE7' },
+    { label: 'VAT Liability', value: fmt(stats.vatLiability), subtitle: 'Estimated', icon: <IconDollarSign size={20} />, color: 'var(--status-paid)', bg: '#E0F2FE' },
   ];
 
   const kanbanColumns = [
@@ -122,9 +122,9 @@ export default function Dashboard({ refresh, onNavigate }: DashboardProps) {
   ];
 
   const quickActions = [
-    { label: 'New Quote', icon: <FileText size={18} />, tab: 'quoting' },
-    { label: 'View Jobs', icon: <Briefcase size={18} />, tab: 'jobs' },
-    { label: 'Reconciliation', icon: <CheckCircle size={18} />, tab: 'reconciliation' },
+    { label: 'New Quote', icon: <IconFileText size={18} />, tab: 'quoting' },
+    { label: 'View Jobs', icon: <IconBriefcase size={18} />, tab: 'jobs' },
+    { label: 'Reconciliation', icon: <IconCheckCircle size={18} />, tab: 'reconciliation' },
   ];
 
   return (
@@ -272,7 +272,7 @@ export default function Dashboard({ refresh, onNavigate }: DashboardProps) {
                 <div className="modal-title">{selectedJob.site_name}</div>
                 <div className="modal-subtitle">{selectedJob.service_name} \u00B7 {selectedJob.mw_output} MW</div>
               </div>
-              <button className="modal-close" onClick={() => setSelectedJob(null)}><X size={18} /></button>
+              <button className="modal-close" onClick={() => setSelectedJob(null)}><IconX size={18} /></button>
             </div>
 
             <div className="modal-body">

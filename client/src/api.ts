@@ -122,6 +122,24 @@ class ApiClient {
   createUser(data: any): Promise<import('./types').User> { return this.request('POST', '/auth/users', data); }
   updateUser(id: string, data: any): Promise<any> { return this.request('PUT', `/auth/users/${id}`, data); }
   deleteUser(id: string): Promise<any> { return this.request('DELETE', `/auth/users/${id}`); }
+
+  // Multi-service quotes
+  getQuotes(): Promise<import('./types').Quote[]> { return this.request('GET', '/quotes'); }
+  getQuote(id: string): Promise<import('./types').Quote> { return this.request('GET', `/quotes/${id}`); }
+  createQuote(data: { business_entity_id: string; lines: { site_id: string; service_id: string }[]; invoice_mode: 'split' | 'combined'; notes?: string }): Promise<import('./types').Quote> {
+    return this.request('POST', '/quotes', data);
+  }
+  updateQuote(id: string, data: any): Promise<import('./types').Quote> { return this.request('PUT', `/quotes/${id}`, data); }
+  deleteQuote(id: string): Promise<any> { return this.request('DELETE', `/quotes/${id}`); }
+  addQuoteLine(id: string, data: { site_id: string; service_id: string }): Promise<import('./types').Quote> {
+    return this.request('POST', `/quotes/${id}/lines`, data);
+  }
+  removeQuoteLine(id: string, lineId: string): Promise<import('./types').Quote> {
+    return this.request('DELETE', `/quotes/${id}/lines/${lineId}`);
+  }
+  acceptQuote(id: string, client_po_number?: string): Promise<{ success: boolean; invoice_mode: string; jobs_created: number; job_ids: string[] }> {
+    return this.request('POST', `/quotes/${id}/accept`, { client_po_number });
+  }
 }
 
 export const api = new ApiClient();

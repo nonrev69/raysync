@@ -1,12 +1,10 @@
 import { Router, Request, Response, NextFunction } from 'express';
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
-import { randomUUID } from 'crypto';
+import { hashPassword, verifyPassword, signToken, verifyToken, shortId } from '../crypto.js';
 import db from '../db.js';
 import type { User, AuthPayload } from '../types.js';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'raysync-dev-secret-change-in-production';
-const TOKEN_EXPIRY = '24h';
+const TOKEN_TTL_SECONDS = 24 * 60 * 60; // 24h
 
 const router = Router();
 
@@ -20,13 +18,14 @@ export function authenticateToken(req: Request, res: Response, next: NextFunctio
     return;
   }
 
-  try {
-    const payload = jwt.verify(token, JWT_SECRET) as AuthPayload;
-    (req as any).user = payload;
-    next();
-  } catch {
+  const payload = verifyToken(token, JWT_SECRET) as AuthPayload | null;
+  if (!payload) {
     res.status(403).json({ error: 'Invalid or expired token' });
+    return;
   }
+
+  (req as any).user = payload;
+  next();
 }
 
 // Middleware to check role
@@ -50,28 +49,18 @@ router.post('/login', (req: Request, res: Response) => {
   }
 
   const user = db.prepare('SELECT * FROM users WHERE username = ? AND is_active = 1').get(username) as User | undefined;
-  if (!user) {
-    res.status(401).json({ error: 'Invalid credentials' });
-    return;
-  }
-
-  if (!user.password_hash) {
-    res.status(401).json({ error: 'Invalid credentials' });
-    return;
-  }
-
-  const valid = bcrypt.compareSync(password, user.password_hash);
-  if (!valid) {
+  if (!user || !user.password_hash || !verifyPassword(password, user.password_hash)) {
     res.status(401).json({ error: 'Invalid credentials' });
     return;
   }
 
   const payload: AuthPayload = { userId: user.id, username: user.username, role: user.role as any };
-  const token = jwt.sign(payload, JWT_SECRET, { expiresIn: TOKEN_EXPIRY });
+  const token = signToken(payload as any, JWT_SECRET, TOKEN_TTL_SECONDS);
 
-  // Store session
-  db.prepare("INSERT INTO sessions (id, user_id, token, expires_at) VALUES (?, ?, ?, datetime('now', '+24 hours'))")
-    .run(randomUUID(), user.id, token);
+  // Store session; drop expired rows so the table stays small on a long-lived box.
+  db.prepare("DELETE FROM sessions WHERE expires_at < datetime('now')").run();
+  db.prepare("INSERT OR REPLACE INTO sessions (id, user_id, token, expires_at) VALUES (?, ?, ?, datetime('now', '+24 hours'))")
+    .run(shortId(), user.id, token);
 
   res.json({
     token,
@@ -126,8 +115,8 @@ router.post('/users', authenticateToken, requireRole('admin'), (req: Request, re
     return;
   }
 
-  const passwordHash = bcrypt.hashSync(password, 10);
-  const id = randomUUID();
+  const passwordHash = hashPassword(password);
+  const id = shortId();
   db.prepare('INSERT INTO users (id, username, password_hash, role, display_name, email) VALUES (?, ?, ?, ?, ?, ?)')
     .run(id, username, passwordHash, role || 'editor', display_name, email || null);
 
@@ -146,7 +135,7 @@ router.put('/users/:id', authenticateToken, requireRole('admin'), (req: Request,
   }
 
   if (password) {
-    const passwordHash = bcrypt.hashSync(password, 10);
+    const passwordHash = hashPassword(password);
     db.prepare("UPDATE users SET password_hash = ?, role = ?, display_name = ?, email = ?, is_active = ?, updated_at = datetime('now') WHERE id = ?")
       .run(passwordHash, role || user.role, display_name || user.display_name, email ?? user.email, is_active ?? user.is_active, id);
   } else {
