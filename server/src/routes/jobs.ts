@@ -209,7 +209,7 @@ router.put('/:id', requireRole('admin', 'editor'), (req: Request, res: Response)
     return;
   }
 
-  updates.push('updated_at = datetime("now")');
+  updates.push("updated_at = datetime('now')");
   db.prepare(`UPDATE jobs SET ${updates.join(', ')} WHERE id = ?`).run(...params, id);
 
   const job = db.prepare(`

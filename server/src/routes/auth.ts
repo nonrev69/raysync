@@ -70,7 +70,7 @@ router.post('/login', (req: Request, res: Response) => {
   const token = jwt.sign(payload, JWT_SECRET, { expiresIn: TOKEN_EXPIRY });
 
   // Store session
-  db.prepare('INSERT INTO sessions (id, user_id, token, expires_at) VALUES (?, ?, ?, datetime("now", "+24 hours"))')
+  db.prepare("INSERT INTO sessions (id, user_id, token, expires_at) VALUES (?, ?, ?, datetime('now', '+24 hours'))")
     .run(randomUUID(), user.id, token);
 
   res.json({
@@ -147,10 +147,10 @@ router.put('/users/:id', authenticateToken, requireRole('admin'), (req: Request,
 
   if (password) {
     const passwordHash = bcrypt.hashSync(password, 10);
-    db.prepare('UPDATE users SET password_hash = ?, role = ?, display_name = ?, email = ?, is_active = ?, updated_at = datetime("now") WHERE id = ?')
+    db.prepare("UPDATE users SET password_hash = ?, role = ?, display_name = ?, email = ?, is_active = ?, updated_at = datetime('now') WHERE id = ?")
       .run(passwordHash, role || user.role, display_name || user.display_name, email ?? user.email, is_active ?? user.is_active, id);
   } else {
-    db.prepare('UPDATE users SET role = ?, display_name = ?, email = ?, is_active = ?, updated_at = datetime("now") WHERE id = ?')
+    db.prepare("UPDATE users SET role = ?, display_name = ?, email = ?, is_active = ?, updated_at = datetime('now') WHERE id = ?")
       .run(role || user.role, display_name || user.display_name, email ?? user.email, is_active ?? user.is_active, id);
   }
 

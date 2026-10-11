@@ -166,8 +166,9 @@ export function initializeDatabase(): void {
       ('cm-012', 'be-004', 'Data Processing', 'accounts4@lowcarbon.com', 'maintenance4@lowcarbon.com');
 
     -- Create default admin user (password: admin123)
+    -- Default admin user (password: admin123)
     INSERT OR IGNORE INTO users (id, username, password_hash, role, display_name, email) VALUES
-      ('user-001', 'admin', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'admin', 'Administrator', 'admin@raysync.local');
+      ('user-001', 'admin', '$2a$10$ntSNon8nX2KnqO1gZJLQfeFSx3lXmKOZVk6YKqtpna7kgBNLCswQe', 'admin', 'Administrator', 'admin@raysync.local');
   `);
 }
 

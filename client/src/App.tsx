@@ -9,10 +9,12 @@ import Calendar from './components/Calendar';
 import Reconciliation from './components/Reconciliation';
 import Settings from './components/Settings';
 import Login from './components/Login';
+import { useToast } from './components/Toast';
 
 type Tab = 'dashboard' | 'quoting' | 'jobs' | 'history' | 'calendar' | 'reconciliation' | 'settings';
 
 function App() {
+  const { showToast } = useToast();
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(localStorage.getItem('raysync_token'));
   const [activeTab, setActiveTab] = useState<Tab>('dashboard');
@@ -81,6 +83,7 @@ function App() {
     setToken(newToken);
     setUser(newUser);
     setError(null);
+    showToast('success', `Welcome back, ${newUser.display_name}!`);
   };
 
   const handleLogout = async () => {
@@ -90,6 +93,7 @@ function App() {
     localStorage.removeItem('raysync_token');
     setToken(null);
     setUser(null);
+    showToast('info', 'You have been logged out.');
   };
 
   const refresh = () => setRefreshKey(k => k + 1);
@@ -150,7 +154,7 @@ function App() {
       </header>
 
       <main className="app-main">
-        {activeTab === 'dashboard' && <Dashboard sites={sites} services={services} entities={entities} subcontractors={subcontractors} contactMatrix={contactMatrix} refresh={refresh} />}
+        {activeTab === 'dashboard' && <Dashboard sites={sites} services={services} entities={entities} subcontractors={subcontractors} contactMatrix={contactMatrix} refresh={refresh} onNavigate={(tab) => setActiveTab(tab as Tab)} />}
         {activeTab === 'quoting' && <Quoting sites={sites} services={services} entities={entities} subcontractors={subcontractors} contactMatrix={contactMatrix} refresh={refresh} />}
         {activeTab === 'jobs' && <Jobs sites={sites} services={services} entities={entities} subcontractors={subcontractors} contactMatrix={contactMatrix} refresh={refresh} />}
         {activeTab === 'history' && <History sites={sites} services={services} entities={entities} subcontractors={subcontractors} contactMatrix={contactMatrix} refresh={refresh} />}

@@ -41,8 +41,8 @@ router.get('/dashboard', (_req: any, res: Response) => {
   const totalRevenueResult = db.prepare("SELECT COALESCE(SUM(invoice_amount), 0) as total FROM jobs WHERE status IN ('Invoiced', 'Paid', 'Closed')").get() as any;
   const totalRevenue = totalRevenueResult.total;
 
-  // Total costs (all subbie costs)
-  const totalCostsResult = db.prepare("SELECT COALESCE(SUM(subbie_cost), 0) as total FROM jobs").get() as any;
+  // Total costs — only on jobs that have been billed, so it aligns with totalRevenue
+  const totalCostsResult = db.prepare("SELECT COALESCE(SUM(subbie_cost), 0) as total FROM jobs WHERE status IN ('Invoiced', 'Paid', 'Closed')").get() as any;
   const totalCosts = totalCostsResult.total;
 
   // Recent jobs (last 10)

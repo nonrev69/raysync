@@ -11,6 +11,7 @@ interface LoginProps {
 export default function Login({ onLogin, error, setError }: LoginProps) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -31,8 +32,11 @@ export default function Login({ onLogin, error, setError }: LoginProps) {
   return (
     <div className="login-container">
       <div className="login-card">
-        <div className="login-title">RaySync</div>
-        <p className="login-subtitle">Solar O&M Automation</p>
+        <div className="login-brand">
+          <div className="login-logo">R</div>
+          <h1 className="login-title">RaySync</h1>
+          <p className="login-subtitle">Solar O&M Automation</p>
+        </div>
 
         {error && <div className="login-error">{error}</div>}
 
@@ -59,12 +63,20 @@ export default function Login({ onLogin, error, setError }: LoginProps) {
               required
             />
           </div>
-          <button type="submit" className="btn btn-primary" style={{ width: '100%', justifyContent: 'center' }} disabled={loading}>
+          <label className="remember-me">
+            <input
+              type="checkbox"
+              checked={rememberMe}
+              onChange={e => setRememberMe(e.target.checked)}
+            />
+            <span>Remember me</span>
+          </label>
+          <button type="submit" className="btn btn-primary login-submit" disabled={loading}>
             {loading ? 'Signing in...' : 'Sign In'}
           </button>
         </form>
 
-        <p style={{ textAlign: 'center', marginTop: '1rem', fontSize: '0.75rem', color: 'var(--ink-muted)' }}>
+        <p className="login-hint">
           Default: admin / admin123
         </p>
       </div>
