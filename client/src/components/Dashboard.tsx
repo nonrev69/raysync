@@ -72,12 +72,47 @@ interface DashboardProps {
   contactMatrix: ContactMatrix[];
   refresh: () => void;
   onNavigate?: (tab: string) => void;
+  showToast?: (type: 'success' | 'error' | 'warning' | 'info', message: string) => void;
 }
 
-export default function Dashboard({ refresh, onNavigate }: DashboardProps) {
+/** Pipeline order — advancing/reverting walks this list. */
+const JOB_STATUSES = ['Quoted', 'PO Received', 'Subbie Notified', 'Works Complete', 'Invoiced', 'Paid', 'Closed'] as const;
+
+export default function Dashboard({ refresh, onNavigate, showToast }: DashboardProps) {
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
+  const [moving, setMoving] = useState(false);
+
+  const statusIdx = (s: string) => (JOB_STATUSES as readonly string[]).indexOf(s);
+
+  /** Advance (+1) or revert (-1) the selected job one step along the pipeline. */
+  const moveJob = async (direction: 1 | -1) => {
+    if (!selectedJob) return;
+    const idx = statusIdx(selectedJob.status);
+    const nextIdx = idx + direction;
+    if (idx < 0 || nextIdx < 0 || nextIdx >= JOB_STATUSES.length) return;
+    const next = JOB_STATUSES[nextIdx];
+
+    // Business rule: an invoice is rejected by the client without the LC PO
+    // number, so refuse to enter 'Invoiced' while it is missing.
+    if (next === 'Invoiced' && !selectedJob.client_po_number) {
+      showToast?.('error', `Cannot mark as Invoiced — ${selectedJob.site_name} has no client PO number. Add it in the Jobs tab first.`);
+      return;
+    }
+
+    setMoving(true);
+    try {
+      const updated = await api.updateJob(selectedJob.id, { status: next });
+      setSelectedJob(updated as unknown as Job);
+      showToast?.('success', `${selectedJob.site_name} — ${selectedJob.status} → ${next}`);
+      refresh();
+    } catch (err: any) {
+      showToast?.('error', err.message || 'Failed to update status');
+    } finally {
+      setMoving(false);
+    }
+  };
 
   useEffect(() => {
     loadDashboard();
@@ -360,6 +395,49 @@ export default function Dashboard({ refresh, onNavigate }: DashboardProps) {
                 </div>
               )}
             </div>
+
+            {/* Pipeline stepper + progress / revert actions */}
+            {(() => {
+              const idx = statusIdx(selectedJob.status);
+              const prev = idx > 0 ? JOB_STATUSES[idx - 1] : null;
+              const next = idx >= 0 && idx < JOB_STATUSES.length - 1 ? JOB_STATUSES[idx + 1] : null;
+              return (
+                <div className="modal-footer">
+                  <div className="status-stepper" role="list" aria-label="Pipeline stage">
+                    {JOB_STATUSES.map((s, i) => (
+                      <div
+                        key={s}
+                        role="listitem"
+                        className={`step ${i < idx ? 'done' : ''} ${i === idx ? 'current' : ''}`}
+                        title={s}
+                      >
+                        <span className="step-dot" />
+                        <span className="step-label">{s}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="modal-actions">
+                    <button
+                      className="btn btn-secondary"
+                      onClick={() => moveJob(-1)}
+                      disabled={moving || !prev}
+                      title={prev ? `Revert to ${prev}` : 'Already at the first stage'}
+                    >
+                      ← {prev || 'Start'}
+                    </button>
+                    <button
+                      className="btn btn-primary"
+                      onClick={() => moveJob(1)}
+                      disabled={moving || !next}
+                      title={next ? `Progress to ${next}` : 'Already closed'}
+                    >
+                      {moving ? 'Saving…' : `${next || 'Closed'} →`}
+                    </button>
+                  </div>
+                </div>
+              );
+            })()}
           </div>
         </div>
       )}

@@ -1115,3 +1115,108 @@
   .form-row { grid-template-columns: 1fr; }
   .period-picker { width: 100%; }
 }
+
+/* ============================================
+   Pipeline stepper + modal progress actions
+   ============================================ */
+
+.modal-footer {
+  margin-top: 1.25rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border);
+}
+
+.status-stepper {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.25rem;
+  margin-bottom: 1.25rem;
+  overflow-x: auto;
+  padding-bottom: 0.25rem;
+}
+
+.status-stepper .step {
+  flex: 1;
+  min-width: 64px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.375rem;
+  position: relative;
+}
+
+/* Connector line between dots */
+.status-stepper .step::before {
+  content: '';
+  position: absolute;
+  top: 5px;
+  left: -50%;
+  width: 100%;
+  height: 2px;
+  background: var(--border);
+  z-index: 0;
+}
+
+.status-stepper .step:first-child::before { display: none; }
+
+.status-stepper .step.done::before,
+.status-stepper .step.current::before { background: var(--brand-green); }
+
+.status-stepper .step-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--canvas);
+  border: 2px solid var(--border-strong);
+  z-index: 1;
+  flex-shrink: 0;
+}
+
+.status-stepper .step.done .step-dot {
+  background: var(--brand-green);
+  border-color: var(--brand-green);
+}
+
+.status-stepper .step.current .step-dot {
+  background: var(--brand-green);
+  border-color: var(--brand-green);
+  box-shadow: 0 0 0 4px rgba(164, 199, 58, 0.25);
+}
+
+.status-stepper .step-label {
+  font-size: 0.625rem;
+  line-height: 1.2;
+  text-align: center;
+  color: var(--ink-faint);
+  letter-spacing: 0.01em;
+}
+
+.status-stepper .step.current .step-label {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.status-stepper .step.done .step-label {
+  color: var(--ink-muted);
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.modal-actions .btn {
+  flex: 1;
+  justify-content: center;
+}
+
+.modal-actions .btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+@media (max-width: 640px) {
+  .status-stepper .step-label { display: none; }
+  .status-stepper .step { min-width: 24px; }
+}

@@ -158,7 +158,7 @@ function App() {
       </header>
 
       <main className="app-main">
-        {activeTab === 'dashboard' && <Dashboard sites={sites} services={services} entities={entities} subcontractors={subcontractors} contactMatrix={contactMatrix} refresh={refresh} onNavigate={(tab) => setActiveTab(tab as Tab)} />}
+        {activeTab === 'dashboard' && <Dashboard sites={sites} services={services} entities={entities} subcontractors={subcontractors} contactMatrix={contactMatrix} refresh={refresh} onNavigate={(tab) => setActiveTab(tab as Tab)} showToast={showToast} />}
         {activeTab === 'schedule' && <Schedule sites={sites} services={services} refresh={refresh} showToast={showToast} />}
         {activeTab === 'quotes' && <QuoteBuilder sites={sites} services={services} entities={entities} refresh={refresh} showToast={showToast} />}
         {activeTab === 'quoting' && <Quoting sites={sites} services={services} entities={entities} subcontractors={subcontractors} contactMatrix={contactMatrix} refresh={refresh} />}

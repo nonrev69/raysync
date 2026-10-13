@@ -162,36 +162,41 @@ seasonal work is planned and quoted up front instead of arriving as a surprise t
 
 | # | Action | Expected |
 |---|---|---|
-| 16 | Jobs tab → change a job's status | Status updates; date fields stamp automatically |
-| 17 | Edit a job (PO, invoice no., links, notes) | Values persist after save |
-| 18 | Filter jobs by status | Table filters correctly |
+| 28 | Jobs tab → change a job's status | Status updates; date fields stamp automatically |
+| 29 | Edit a job (PO, invoice no., links, notes) | Values persist after save |
+| 30 | Filter jobs by status | Table filters correctly |
 
 ### 4.5 Dashboard
 
 | # | Action | Expected |
 |---|---|---|
-| 19 | Load dashboard with seeded data | Stat cards populated; kanban shows jobs per column |
-| 20 | Inspect the Monthly Revenue chart | SVG area chart renders — **must not crash** (recharts was removed because it crashed under React 19; verify no console error) |
-| 21 | Check Profit / margin on stat cards | **Positive** with seeded data (~£36,750 / ~41%). Negative profit = cost-scope regression. |
-| 22 | Click a kanban card | Job detail modal with sectioned layout |
+| 31 | Load dashboard with seeded data | Stat cards populated; kanban shows jobs per column |
+| 32 | Inspect the Monthly Revenue chart | SVG area chart renders — **must not crash** (recharts was removed because it crashed under React 19; verify no console error) |
+| 33 | Check Profit / margin on stat cards | **Positive** with seeded data (~£36,750 / ~41%). Negative profit = cost-scope regression. |
+| 34 | Click a kanban card | Job detail modal with sectioned layout **and a pipeline stepper** |
+| 35 | Click **Progress →** (the button names the next stage) | Status advances one step; toast confirms; the card moves column on the board |
+| 36 | Click **← Revert** | Status steps back one stage; toast confirms |
+| 37 | Open a job with **no client PO** and try to advance into *Invoiced* | **Blocked** with an error toast — the LC PO number is mandatory on invoices |
+| 38 | Add the PO in the Jobs tab, then retry | Now advances into Invoiced and stamps `invoiced_date` |
+| 39 | Advance a job all the way to *Closed* | Progress button disables at the final stage; Revert still works |
 
 ### 4.6 Reconciliation
 
 | # | Action | Expected |
 |---|---|---|
-| 23 | Reconciliation tab → enter a payment amount | Suggests matching invoice combinations |
-| 24 | Select invoices → "Mark as Paid" | Status moves to Paid |
-| 25 | Subcontractor invoice tracker | Shows agreed vs invoiced, flags discrepancies |
+| 40 | Reconciliation tab → enter a payment amount | Suggests matching invoice combinations |
+| 41 | Select invoices → "Mark as Paid" | Status moves to Paid |
+| 42 | Subcontractor invoice tracker | Shows agreed vs invoiced, flags discrepancies |
 
 ### 4.7 Settings & roles
 
 | # | Action | Expected |
 |---|---|---|
-| 26 | Settings → each section (Sites, Services, Entities, Subbies, Contact Matrix, Rate Overrides, Users) | All load and render |
-| 27 | Add / edit / delete a record | Persists across reload |
-| 28 | Edit a service rate | A row is written to the rate audit log |
-| 29 | Toggle light / dark theme | Whole UI re-themes; persists on reload |
-| 30 | Resize to mobile width | Layouts collapse; tables become card views |
+| 43 | Settings → each section (Sites, Services, Entities, Subbies, Contact Matrix, Rate Overrides, Users) | All load and render |
+| 44 | Add / edit / delete a record | Persists across reload |
+| 45 | Edit a service rate | A row is written to the rate audit log |
+| 46 | Toggle light / dark theme | Whole UI re-themes; persists on reload |
+| 47 | Resize to mobile width | Layouts collapse; tables become card views |
 
 ### 4.8 API smoke test
 
