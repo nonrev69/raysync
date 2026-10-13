@@ -95,6 +95,56 @@ export interface ContactMatrix {
 
 export type QuoteStatus = 'Draft' | 'Sent' | 'Accepted' | 'Declined';
 export type InvoiceMode = 'split' | 'combined';
+export type Frequency = 'monthly' | 'quarterly' | 'biannual' | 'annual' | 'one-off';
+
+export interface RecurringPlan {
+  id: string;
+  site_id: string;
+  service_id: string;
+  frequency: Frequency;
+  season_start_month: number;
+  season_end_month: number;
+  last_generated_date: string | null;
+  is_active: number;
+  notes: string | null;
+  created_at: string;
+  updated_at: string;
+  // Joined
+  site_name?: string;
+  mw_output?: number;
+  entity_id?: string;
+  entity_name?: string;
+  entity_code?: string;
+  service_name?: string;
+  short_code?: string;
+  category?: string;
+  subbie_name?: string;
+  client_rate_per_mw?: number;
+  subbie_rate_per_mw?: number;
+}
+
+export interface DueLine extends RecurringPlan {
+  lineAmount: number;
+  subbieCost: number;
+  clientRate: number;
+  subbieRate: number;
+  reason: string;
+}
+
+export interface DueGroup {
+  entity_id: string;
+  entity_name: string;
+  entity_code: string;
+  lines: DueLine[];
+  total: number;
+}
+
+export interface DueWork {
+  period: string;
+  total_due: number;
+  total_value: number;
+  groups: DueGroup[];
+}
 
 export interface QuoteLine {
   id: string;

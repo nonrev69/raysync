@@ -132,7 +132,33 @@ Each item is independently verifiable. **Report actual observed results, not exp
 | 14 | Repeat 6–13 with **Combined** | **Exactly one job** created for the whole quote; line summary folded into the job notes |
 | 15 | Accept an already-accepted quote | Rejected with "Quote already accepted" |
 
-### 4.3 Jobs & pipeline
+### 4.3 Maintenance schedule ← *new: planned work*
+
+This is the "schedule, not the job" layer. Recurring plans model predictable work
+(grass cutting monthly through the growing season, thermographic surveys annually) so
+seasonal work is planned and quoted up front instead of arriving as a surprise text.
+
+| # | Action | Expected |
+|---|---|---|
+| 16 | Schedule tab | 11 seeded plans; helper text explains the purpose |
+| 17 | Step the month picker to **Jun 2027** | 10 jobs due across 3 client entities, £43,150 |
+| 18 | Read the "Why due" column | Each line states its reason (e.g. "Never scheduled before") |
+| 19 | Step to **Oct 2027** | Only 3 due — quarterly panel cleaning + the annual autumn hedge cut |
+| 20 | Step to **Jan 2027** | Nothing due — outside every season window (grass cutting is Apr–Sep) |
+| 21 | Generate for **Jun 2027** | Toast: 3 draft quotes created; they appear in the **Quotes** tab as `Draft` |
+| 22 | **Generate Jun 2027 a second time** | **"Nothing due" / 0 created.** Regression test — see note below. |
+| 23 | Step to **Jul 2027** | Only the 5 monthly grass-cutting jobs are due — quarterly work must NOT re-fire |
+| 24 | Step to **Sep 2027** | Quarterly panel cleaning IS due again (3 months after June) |
+| 25 | Accept one generated quote (Quotes tab) with a PO | Jobs created, all carrying that PO |
+| 26 | Add a new schedule (site + service + frequency + season) | Appears in the list |
+| 27 | Set a plan inactive, then preview that month | The inactive plan no longer appears as due |
+
+> **Regression note (test 22):** the generator originally stamped `last_generated_date`
+> with wall-clock "now" instead of the scheduled period, so a plan looked overdue the
+> instant it was generated — generating June twice produced duplicate quotes. The stamp is
+> now the first of the *scheduled* month. Verify this holds.
+
+### 4.4 Jobs & pipeline
 
 | # | Action | Expected |
 |---|---|---|
@@ -140,7 +166,7 @@ Each item is independently verifiable. **Report actual observed results, not exp
 | 17 | Edit a job (PO, invoice no., links, notes) | Values persist after save |
 | 18 | Filter jobs by status | Table filters correctly |
 
-### 4.4 Dashboard
+### 4.5 Dashboard
 
 | # | Action | Expected |
 |---|---|---|
@@ -149,7 +175,7 @@ Each item is independently verifiable. **Report actual observed results, not exp
 | 21 | Check Profit / margin on stat cards | **Positive** with seeded data (~£36,750 / ~41%). Negative profit = cost-scope regression. |
 | 22 | Click a kanban card | Job detail modal with sectioned layout |
 
-### 4.5 Reconciliation
+### 4.6 Reconciliation
 
 | # | Action | Expected |
 |---|---|---|
@@ -157,7 +183,7 @@ Each item is independently verifiable. **Report actual observed results, not exp
 | 24 | Select invoices → "Mark as Paid" | Status moves to Paid |
 | 25 | Subcontractor invoice tracker | Shows agreed vs invoiced, flags discrepancies |
 
-### 4.6 Settings & roles
+### 4.7 Settings & roles
 
 | # | Action | Expected |
 |---|---|---|
@@ -167,7 +193,7 @@ Each item is independently verifiable. **Report actual observed results, not exp
 | 29 | Toggle light / dark theme | Whole UI re-themes; persists on reload |
 | 30 | Resize to mobile width | Layouts collapse; tables become card views |
 
-### 4.7 API smoke test
+### 4.8 API smoke test
 
 All routes except `POST /api/auth/login` require `Authorization: Bearer <token>`.
 
@@ -184,6 +210,10 @@ POST   /api/quotes                {business_entity_id,lines[],invoice_mode,notes
 POST   /api/quotes/:id/lines
 DELETE /api/quotes/:id/lines/:lineId
 POST   /api/quotes/:id/accept     {client_po_number} → {jobs_created,job_ids[]}
+GET    /api/recurring             → recurring maintenance plans
+POST   /api/recurring             {site_id,service_id,frequency,season_start_month,season_end_month}
+GET    /api/recurring/due?period=YYYY-MM   → preview only, NO side effects
+POST   /api/recurring/generate    {period,invoice_mode} → draft quotes per entity
 GET    /api/dashboard/dashboard
 GET    /api/dashboard/calendar | /reconciliation | /subbie-invoices
 ```

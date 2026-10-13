@@ -6,6 +6,7 @@ import masterDataRoutes from './routes/masterData.js';
 import jobRoutes from './routes/jobs.js';
 import dashboardRoutes from './routes/dashboard.js';
 import quoteRoutes from './routes/quotes.js';
+import recurringRoutes from './routes/recurring.js';
 
 const app = express();
 const PORT = parseInt(process.env.PORT || '3030', 10);
@@ -23,6 +24,7 @@ app.use('/api', masterDataRoutes);
 app.use('/api/jobs', jobRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/quotes', quoteRoutes);
+app.use('/api/recurring', recurringRoutes);
 
 // Health check
 app.get('/api/health', (_req, res) => {

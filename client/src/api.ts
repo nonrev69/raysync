@@ -140,6 +140,18 @@ class ApiClient {
   acceptQuote(id: string, client_po_number?: string): Promise<{ success: boolean; invoice_mode: string; jobs_created: number; job_ids: string[] }> {
     return this.request('POST', `/quotes/${id}/accept`, { client_po_number });
   }
+
+  // Recurring maintenance plans
+  getRecurringPlans(): Promise<import('./types').RecurringPlan[]> { return this.request('GET', '/recurring'); }
+  createRecurringPlan(data: any): Promise<import('./types').RecurringPlan> { return this.request('POST', '/recurring', data); }
+  updateRecurringPlan(id: string, data: any): Promise<import('./types').RecurringPlan> { return this.request('PUT', `/recurring/${id}`, data); }
+  deleteRecurringPlan(id: string): Promise<any> { return this.request('DELETE', `/recurring/${id}`); }
+  getDueWork(period: string): Promise<import('./types').DueWork> {
+    return this.request('GET', `/recurring/due?period=${encodeURIComponent(period)}`);
+  }
+  generatePlan(period: string, invoice_mode: 'split' | 'combined' = 'split'): Promise<{ period: string; quotes_created: number; lines_scheduled: number; quotes: any[]; message?: string }> {
+    return this.request('POST', '/recurring/generate', { period, invoice_mode });
+  }
 }
 
 export const api = new ApiClient();

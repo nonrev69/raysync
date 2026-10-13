@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import api from './api';
 import type { User, Site, Service, BusinessEntity, Subcontractor, ContactMatrix } from './types';
 import Dashboard from './components/Dashboard';
+import Schedule from './components/Schedule';
 import QuoteBuilder from './components/QuoteBuilder';
 import Quoting from './components/Quoting';
 import Jobs from './components/Jobs';
@@ -12,7 +13,7 @@ import Settings from './components/Settings';
 import Login from './components/Login';
 import { useToast } from './components/Toast';
 
-type Tab = 'dashboard' | 'quotes' | 'quoting' | 'jobs' | 'history' | 'calendar' | 'reconciliation' | 'settings';
+type Tab = 'dashboard' | 'schedule' | 'quotes' | 'quoting' | 'jobs' | 'history' | 'calendar' | 'reconciliation' | 'settings';
 
 function App() {
   const { showToast } = useToast();
@@ -114,6 +115,7 @@ function App() {
 
   const tabs: { id: Tab; label: string; icon: string }[] = [
     { id: 'dashboard', label: 'Dashboard', icon: 'grid' },
+    { id: 'schedule', label: 'Schedule', icon: 'calendar' },
     { id: 'quotes', label: 'Quotes', icon: 'layers' },
     { id: 'quoting', label: 'Quick Quote', icon: 'file-text' },
     { id: 'jobs', label: 'Jobs', icon: 'briefcase' },
@@ -157,6 +159,7 @@ function App() {
 
       <main className="app-main">
         {activeTab === 'dashboard' && <Dashboard sites={sites} services={services} entities={entities} subcontractors={subcontractors} contactMatrix={contactMatrix} refresh={refresh} onNavigate={(tab) => setActiveTab(tab as Tab)} />}
+        {activeTab === 'schedule' && <Schedule sites={sites} services={services} refresh={refresh} showToast={showToast} />}
         {activeTab === 'quotes' && <QuoteBuilder sites={sites} services={services} entities={entities} refresh={refresh} showToast={showToast} />}
         {activeTab === 'quoting' && <Quoting sites={sites} services={services} entities={entities} subcontractors={subcontractors} contactMatrix={contactMatrix} refresh={refresh} />}
         {activeTab === 'jobs' && <Jobs sites={sites} services={services} entities={entities} subcontractors={subcontractors} contactMatrix={contactMatrix} refresh={refresh} />}

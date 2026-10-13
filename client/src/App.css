@@ -1005,3 +1005,113 @@
   .mode-toggle { flex-direction: column; }
   .quote-totals { gap: 1.25rem; }
 }
+
+/* ============================================
+   Maintenance Schedule (recurring plans)
+   ============================================ */
+
+.period-picker {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 2rem 1rem;
+  color: var(--ink-muted);
+  text-align: center;
+}
+
+.empty-state svg {
+  color: var(--success);
+  margin-bottom: 0.25rem;
+}
+
+.empty-state p {
+  font-size: 0.875rem;
+}
+
+.due-summary {
+  display: flex;
+  gap: 2rem;
+  padding: 0.875rem 1rem;
+  background: var(--canvas-sunken);
+  border-radius: var(--radius-md);
+  margin-bottom: 1.25rem;
+}
+
+.due-summary > div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.due-summary span {
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--ink-muted);
+}
+
+.due-summary strong {
+  font-size: 1rem;
+  color: var(--ink);
+}
+
+.due-group {
+  margin-bottom: 1.25rem;
+}
+
+.due-group-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding-bottom: 0.375rem;
+  margin-bottom: 0.375rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.due-group-name {
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: var(--ink);
+}
+
+.due-group-total {
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: var(--brand-green-dark);
+}
+
+.due-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 1.25rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border);
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.modal-body {
+  display: grid;
+  gap: 1rem;
+}
+
+@media (max-width: 768px) {
+  .due-summary { gap: 1.25rem; flex-wrap: wrap; }
+  .due-actions { flex-direction: column; align-items: stretch; }
+  .form-row { grid-template-columns: 1fr; }
+  .period-picker { width: 100%; }
+}

@@ -149,6 +149,7 @@ export function initializeDatabase(): void {
       subbie_cost REAL NOT NULL DEFAULT 0,
       job_id TEXT REFERENCES jobs(id),
       sort_order INTEGER NOT NULL DEFAULT 0,
+      plan_id TEXT REFERENCES recurring_plans(id),
       created_at TEXT NOT NULL DEFAULT (datetime('now'))
     );
 
@@ -156,6 +157,31 @@ export function initializeDatabase(): void {
     CREATE INDEX IF NOT EXISTS idx_jobs_status ON jobs(status);
     CREATE INDEX IF NOT EXISTS idx_jobs_site ON jobs(site_id);
     CREATE INDEX IF NOT EXISTS idx_jobs_service ON jobs(service_id);
+
+    -- Recurring maintenance plans: the schedule, not the job.
+    -- Models predictable work (grass cutting monthly Apr-Sep, thermographic
+    -- survey annually) so seasonal work can be planned and quoted up front
+    -- instead of arriving as a surprise text from the client.
+    CREATE TABLE IF NOT EXISTS recurring_plans (
+      id TEXT PRIMARY KEY,
+      site_id TEXT NOT NULL REFERENCES sites(id),
+      service_id TEXT NOT NULL REFERENCES services(id),
+      frequency TEXT NOT NULL DEFAULT 'annual'
+        CHECK(frequency IN ('monthly', 'quarterly', 'biannual', 'annual', 'one-off')),
+      season_start_month INTEGER NOT NULL DEFAULT 1
+        CHECK(season_start_month BETWEEN 1 AND 12),
+      season_end_month INTEGER NOT NULL DEFAULT 12
+        CHECK(season_end_month BETWEEN 1 AND 12),
+      last_generated_date TEXT,
+      is_active INTEGER NOT NULL DEFAULT 1,
+      notes TEXT,
+      created_at TEXT NOT NULL DEFAULT (datetime('now')),
+      updated_at TEXT NOT NULL DEFAULT (datetime('now')),
+      UNIQUE(site_id, service_id)
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_recurring_site ON recurring_plans(site_id);
+    CREATE INDEX IF NOT EXISTS idx_recurring_active ON recurring_plans(is_active);
 
     -- Insert default data
     INSERT OR IGNORE INTO business_entities (id, name, code) VALUES
@@ -203,7 +229,35 @@ export function initializeDatabase(): void {
     -- Default admin user (password: admin123) — scrypt hash
     INSERT OR IGNORE INTO users (id, username, password_hash, role, display_name, email) VALUES
       ('user-001', 'admin', 'scrypt$s8ciD68w_yAoFpQXDn8p6g$t7-9lHgtGgWrJUOZ8EttZaWbgdeeuYPzD2ERusqjpm_9B_HAbXXConArUdEr1zwNM4WY-FdQOb9bwL89q6m19A', 'admin', 'Administrator', 'admin@raysync.local');
+
+    -- Example recurring maintenance plans (the predictable work).
+    -- Grass cutting runs monthly through the growing season; thermographic
+    -- surveys are annual (typically warranty-mandated); hedge trimming is
+    -- annual in autumn; panel cleaning runs quarterly year-round.
+    INSERT OR IGNORE INTO recurring_plans (id, site_id, service_id, frequency, season_start_month, season_end_month, notes) VALUES
+      ('rp-001', 'site-001', 'svc-001', 'monthly',   4,  9, 'Growing season'),
+      ('rp-002', 'site-001', 'svc-005', 'annual',    6,  6, 'Annual thermographic survey'),
+      ('rp-003', 'site-001', 'svc-003', 'quarterly', 1, 12, 'Year-round panel cleaning'),
+      ('rp-004', 'site-002', 'svc-001', 'monthly',   4,  9, 'Growing season'),
+      ('rp-005', 'site-002', 'svc-002', 'biannual',  3,  9, 'Spring and late summer'),
+      ('rp-006', 'site-003', 'svc-001', 'monthly',   4,  9, 'Growing season'),
+      ('rp-007', 'site-003', 'svc-004', 'annual',   10, 10, 'Autumn hedge cut'),
+      ('rp-008', 'site-003', 'svc-005', 'annual',    6,  6, 'Annual thermographic survey'),
+      ('rp-009', 'site-004', 'svc-001', 'monthly',   4,  9, 'Growing season'),
+      ('rp-010', 'site-005', 'svc-001', 'monthly',   4,  9, 'Growing season'),
+      ('rp-011', 'site-005', 'svc-003', 'quarterly', 1, 12, 'Year-round panel cleaning');
   `);
+
+  // --- Migrations for databases created before a column existed ---
+  ensureColumn('quote_lines', 'plan_id', 'TEXT');
+}
+
+/** Add a column if it is missing. Keeps existing databases working after a schema change. */
+function ensureColumn(table: string, column: string, definition: string): void {
+  const cols = db.prepare(`PRAGMA table_info(${table})`).all() as Array<{ name: string }>;
+  if (!cols.some(c => c.name === column)) {
+    db.exec(`ALTER TABLE ${table} ADD COLUMN ${column} ${definition}`);
+  }
 }
 
 export default db;

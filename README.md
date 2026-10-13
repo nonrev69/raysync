@@ -11,6 +11,7 @@ Built for **Sum Ltd** (solar O&M main contractor) and its client **Low Carbon**.
 
 | Area | Capability |
 |---|---|
+| **Schedule** | Recurring maintenance plans (site × service × frequency × season) that generate the seasonal quote in one click |
 | **Quoting** | Build multi-service quotes across many sites, with live MW-based pricing and margin |
 | **Quotes → Jobs** | Accept a quote and either split it into one job per line, or keep it as a single combined job |
 | **Jobs** | Track each operation through `Quoted → PO Received → Subbie Notified → Works Complete → Invoiced → Paid → Closed` |
@@ -130,7 +131,7 @@ jake-app/
         ├── index.ts        App entry, route wiring
         ├── db.ts           Schema + seed data (node:sqlite)
         ├── crypto.ts       scrypt hashing + HMAC session tokens
-        └── routes/         auth, masterData, jobs, quotes, dashboard
+        └── routes/         auth, masterData, jobs, quotes, recurring, dashboard
 ```
 
 ### Deliberately minimal dependencies
